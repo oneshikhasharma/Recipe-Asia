@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<catalog>
+    <recipe id="1">
+        <title>Indian</title>
+    </recipe>
+    <recipe id="2">
+        <title>Chinese</title>
+    </recipe>
+    <recipe id="3">
+        <title>Thai</title>
+    </recipe>
+</catalog>

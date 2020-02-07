@@ -60,5 +60,11 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>Recipe Details will be using camera to capture recipe image.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Recipe Details will be using Photo library to capture recipe image.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Recipe Details will be using Photo library to capture recipe image.</string>
 </dict>
 </plist>

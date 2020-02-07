@@ -1,0 +1,28 @@
+PODS:
+  - DropDown (2.3.13)
+  - IQKeyboardManagerSwift (6.5.5)
+  - SkyFloatingLabelTextField (3.8.0)
+  - Toast-Swift (5.0.1)
+
+DEPENDENCIES:
+  - DropDown
+  - IQKeyboardManagerSwift
+  - SkyFloatingLabelTextField (~> 3.0)
+  - Toast-Swift
+
+SPEC REPOS:
+  trunk:
+    - DropDown
+    - IQKeyboardManagerSwift
+    - SkyFloatingLabelTextField
+    - Toast-Swift
+
+SPEC CHECKSUMS:
+  DropDown: 8a2116376c1981888557f72ec2ffc9a5e0e456ec
+  IQKeyboardManagerSwift: 0fb93310284665245591f50f7a5e38de615960b7
+  SkyFloatingLabelTextField: 5a338412114808e961fe2d14ea2c5452c8b6e4aa
+  Toast-Swift: 9b6a70f28b3bf0b96c40d46c0c4b9d6639846711
+
+PODFILE CHECKSUM: b8dc54a3e26032529874939cde84abb0b9a55ce1
+
+COCOAPODS: 1.8.4
