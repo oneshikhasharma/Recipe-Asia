@@ -8,11 +8,12 @@
 
 import UIKit
 
+//MARK: Declare recipe title
 struct Recipe {
     var recipeTitle: String
 }
 
-class RecipeTypeViewController: UIViewController {
+class RecipeCategoryViewController: UIViewController {
     
     @IBOutlet var recipeTypeCollectionView : UICollectionView!
     var recipes : [Recipe] = []
@@ -24,22 +25,23 @@ class RecipeTypeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let path = Bundle.main.url(forResource: "recipetypes", withExtension: "xml") {
+        // Fetch recipe categories from xml file
+        if let path = Bundle.main.url(forResource: "recipeCategory", withExtension: "xml") {
             if let parser = XMLParser(contentsOf: path) {
                 parser.delegate = self
                 parser.parse()
             }
         }
-        // Do any additional setup after loading the view.
     }
     
-    
+    //MARK: Perform segue to all recipes view
     @IBAction func allRecipeBtnAction(_ sender: UIButton)
     {
         self.performSegue(withIdentifier: "allrecipe", sender: self)
         
     }
     
+    //MARK: Perform segues (Actions, Data)
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.destination is AllRecipesViewController {
             let vc = segue.destination as? AllRecipesViewController
@@ -49,42 +51,49 @@ class RecipeTypeViewController: UIViewController {
     }
 }
 
-extension RecipeTypeViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
+//MARK: Collection View Delegate functions
+extension RecipeCategoryViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return recipes.count
+        return recipes.count // Recipe category cell count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell{
+        
         let cell : RecipeTypeCollectionViewCell = recipeTypeCollectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! RecipeTypeCollectionViewCell
-        let recipe = recipes[indexPath.row]
+        
+        let recipe = recipes[indexPath.row] // fetch data from xml and populate on index row
         cell.recipeTypeName.text = recipe.recipeTitle
+       
         return cell
     }
     
     
+// set collection view cell size
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let padding: CGFloat =  5
         let collectionViewSize = recipeTypeCollectionView.frame.size.width - padding
         return CGSize(width: collectionViewSize/2, height: collectionViewSize/2)
     }
     
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath){
+    // perform segue on cell selection to show detail screen
+      func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath){
         let recipe = recipes[indexPath.row]
         recipeCategory = recipe.recipeTitle
-            
+        
         self.performSegue(withIdentifier: "allrecipe", sender: self)
     }
 }
 
-extension RecipeTypeViewController : XMLParserDelegate
+//MARK: XML Parser Delegate functions
+extension RecipeCategoryViewController : XMLParserDelegate
 {
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
         
         if elementName == "recipe" {
             recipeTitle = String()
         }
-        
+
         self.elementName = elementName
     }
     

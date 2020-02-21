@@ -27,18 +27,18 @@ class AllRecipesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Fectch all recipe types xml files
         for recipeTitle in recipes {
             recipeArray.append(recipeTitle.recipeTitle)
         }
-        // Do any additional setup after loading the view.
     }
     
+    //MARK: View appears on window
     override func viewWillAppear(_ animated: Bool) {
         
-        retrieveData()
+        retrieveData() // fetch all recipes
         
-        
-        if recipeCategory != ""
+        if recipeCategory != "" // check if recipe category is not empty, show filtered recipe else all recipes will be shown
         {
             self.recipeModel =  self.recipeModel1.filter{ ($0.recipeType == recipeCategory) }
             self.recipesCollectionView.reloadData()
@@ -46,6 +46,8 @@ class AllRecipesViewController: UIViewController {
             
         }
     }
+    
+    //MARK: Filter recipes on category bases
     @IBAction func filterBtnAction(_ sender: UIButton)
     {
         let dropDown = DropDown()
@@ -54,6 +56,7 @@ class AllRecipesViewController: UIViewController {
         
         dropDown.selectionAction = { [unowned self] (index: Int, item: String) in
             
+            // Filter recipe to new object on recipe category basis
             self.recipeModel =  self.recipeModel1.filter{ ($0.recipeType == self.recipeArray[index]) }
             self.recipesCollectionView.reloadData()
             
@@ -65,8 +68,10 @@ class AllRecipesViewController: UIViewController {
         
     }
     
-    
+    //MARK: Fetch all recipes functions
     func retrieveData(){
+        
+        // empty both recipe models to populate with updates data
         recipeModel.removeAll()
         recipeModel1.removeAll()
         
@@ -81,10 +86,12 @@ class AllRecipesViewController: UIViewController {
         do {
             let result = try managedContext.fetch(fetchRequest)
             for data in result as! [NSManagedObject]{
-                if let imageData = data.value(forKey: "image") as? NSData {
-                    recipeModel.append(RecipeTypeModel(id: data.value(forKey: "id") as! Int, recipeType: data.value(forKey: "recipe_type") as? String ?? "NA", recipeName: data.value(forKey: "recipe_name") as? String ?? "NA", ingredients: data.value(forKey: "ingredients") as! String, steps: data.value(forKey: "steps") as! String, image: imageData))
+                if let imageData = data.value(forKey: "recipe_image") as? NSData {
                     
-                    recipeModel1.append(RecipeTypeModel(id: data.value(forKey: "id") as! Int, recipeType: data.value(forKey: "recipe_type") as? String ?? "NA", recipeName: data.value(forKey: "recipe_name") as? String ?? "NA", ingredients: data.value(forKey: "ingredients") as! String, steps: data.value(forKey: "steps") as! String, image: imageData))
+                    // Populate recipe model
+                    recipeModel.append(RecipeTypeModel(id: data.value(forKey: "id") as! Int, recipeType: data.value(forKey: "recipe_type") as? String ?? "NA", recipeName: data.value(forKey: "recipe_name") as? String ?? "NA", recipeIngredients: data.value(forKey: "recipe_ingredients") as! String, recipeInstructions: data.value(forKey: "recipe_instructions") as! String, recipeImage: imageData))
+                    
+                    recipeModel1.append(RecipeTypeModel(id: data.value(forKey: "id") as! Int, recipeType: data.value(forKey: "recipe_type") as? String ?? "NA", recipeName: data.value(forKey: "recipe_name") as? String ?? "NA", recipeIngredients: data.value(forKey: "recipe_ingredients") as! String, recipeInstructions: data.value(forKey: "recipe_instructions") as! String, recipeImage: imageData))
                     
                     self.recipesCollectionView.reloadData()
                 }
@@ -95,7 +102,7 @@ class AllRecipesViewController: UIViewController {
     }
     
     
-    
+    //MARK: Perform segues (Actions, Data)
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.destination is RecipeDetailViewController{
             let vc = segue.destination as? RecipeDetailViewController
@@ -107,27 +114,32 @@ class AllRecipesViewController: UIViewController {
     }
 }
 
+//MARK: Collection View Delegates
 extension AllRecipesViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return recipeModel.count
+        return recipeModel.count // Item count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell{
+        
         let cell : AllRecipeCollectionViewCell = recipesCollectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! AllRecipeCollectionViewCell
-        let recipe = recipeModel[indexPath.row]
+        
+        let recipe = recipeModel[indexPath.row] // Get data from recipe model at index row, populate collection view
         cell.recipeName.text = recipe.recipeName
-        if let image = UIImage(data:recipe.image as Data) {
+        if let image = UIImage(data:recipe.recipeImage as Data) {
             cell.recipeImage.image = image
         }
         
         return cell
     }
     
+    // perform segue on cell selection to show detail screen
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         self.performSegue(withIdentifier: "recipe_detail", sender: indexPath.row)
     }
     
+    // set collection view cell size
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let padding: CGFloat =  3
         let collectionViewSize = recipesCollectionView.frame.size.width / 3 - padding

@@ -23,20 +23,20 @@ class RecipeDetailViewController: UIViewController {
     
     var recipeModel : RecipeTypeModel?
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // set values to outlets
         recipeCategoryLbl.text = recipeModel?.recipeType ??  "NA"
         recipeNameTF.text = recipeModel?.recipeName ?? "NA"
-        recipesInstructionsTV.text = recipeModel?.steps ?? "NA"
-        recipesIngredientsTV.text = recipeModel?.ingredients ?? "NA"
-        if let image = UIImage(data:recipeModel!.image as Data) {
+        recipesInstructionsTV.text = recipeModel?.recipeInstructions ?? "NA"
+        recipesIngredientsTV.text = recipeModel?.recipeIngredients ?? "NA"
+        if let image = UIImage(data:recipeModel!.recipeImage as Data) {
             recipesImageView.image = image
         }
-        // Do any additional setup after loading the view.
     }
     
+    // MARK: Back button action
     @IBAction func backBtnAction(_ sender: UIButton)
        {
            self.dismiss(animated: true, completion: nil)
